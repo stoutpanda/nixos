@@ -1,0 +1,66 @@
+{
+  description = "NixOS laptops: voidreliquary (Framework 13 Pro) and whitedwarf (ASUS Zephyrus G14).";
+
+  inputs = {
+    nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs/nixos-unstable";
+    nixos-hardware.url = "github:NixOS/nixos-hardware";
+    home-manager = {
+      url = "github:nix-community/home-manager/release-26.05";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    disko = {
+      url = "github:nix-community/disko/latest";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    catppuccin = {
+      url = "github:catppuccin/nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+  };
+
+  outputs =
+    {
+      nixpkgs,
+      nixpkgs-unstable,
+      home-manager,
+      disko,
+      catppuccin,
+      ...
+    }@inputs:
+    let
+      # One host = one directory under hosts/ and one line below.
+      # The host's default.nix picks its desktop, users and optional modules by importing them.
+      mkHost =
+        hostname:
+        nixpkgs.lib.nixosSystem {
+          specialArgs = { inherit inputs hostname; };
+          modules = [
+            disko.nixosModules.disko
+            catppuccin.nixosModules.catppuccin
+            home-manager.nixosModules.home-manager
+            {
+              nixpkgs.config.allowUnfree = true;
+              nixpkgs.overlays = [ (import ./overlays/unstable.nix { inherit nixpkgs-unstable; }) ];
+
+              # Home Manager runs inside nixos-rebuild: one command applies system and user config.
+              home-manager = {
+                useGlobalPkgs = true;
+                useUserPackages = true;
+                backupFileExtension = "hm-backup";
+                extraSpecialArgs = { inherit inputs hostname; };
+                sharedModules = [ catppuccin.homeModules.catppuccin ];
+              };
+            }
+            ./modules/base.nix
+            ./hosts/${hostname}
+          ];
+        };
+    in
+    {
+      nixosConfigurations = {
+        voidreliquary = mkHost "voidreliquary";
+        whitedwarf = mkHost "whitedwarf";
+      };
+    };
+}
