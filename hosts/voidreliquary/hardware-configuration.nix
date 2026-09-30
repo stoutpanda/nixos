@@ -1,5 +1,5 @@
 # PLACEHOLDER so the flake evaluates before install. Replace it on the installer with:
-#   nixos-generate-config --no-filesystems --root /mnt --dir hosts/voidreliquary
+#   nixos-generate-config --no-filesystems --show-hardware-config > hosts/voidreliquary/hardware-configuration.nix
 # Filesystems come from disko.nix, not from this file.
 { lib, ... }:
 {

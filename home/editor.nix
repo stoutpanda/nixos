@@ -4,10 +4,15 @@
 # (nix-ld in modules/base.nix lets Mason-installed language servers run.)
 { pkgs, ... }:
 {
+  # LazyVim owns ~/.config/nvim, including its colorscheme and plugins.
+  catppuccin.nvim.enable = false;
+
   programs.neovim = {
     enable = true;
     defaultEditor = true;
     viAlias = true;
+    # Load Home Manager's provider settings through the wrapper, leaving init.lua to LazyVim.
+    sideloadInitLua = true;
     extraPackages = with pkgs; [
       gcc
       gnumake

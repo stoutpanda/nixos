@@ -1,5 +1,5 @@
 # git, gh, glab. Logins (gh auth login, glab auth login) are done once by hand.
-{ ... }:
+{ pkgs, ... }:
 {
   programs.git = {
     enable = true;
@@ -22,4 +22,5 @@
   };
 
   programs.lazygit.enable = true;
+  home.packages = [ pkgs.glab ];
 }

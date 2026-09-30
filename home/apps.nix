@@ -7,6 +7,7 @@
     enable = true;
     profiles.default.isDefault = true;
   };
+  catppuccin.thunderbird.profile = "default";
 
   programs.rbw.enable = true; # Bitwarden CLI: rbw config set email ..., then rbw get <name>
 

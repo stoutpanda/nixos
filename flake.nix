@@ -58,6 +58,12 @@
         };
     in
     {
+      # The installer uses the same disko revision and nixpkgs as this configuration.
+      apps.x86_64-linux.disko = {
+        type = "app";
+        program = "${disko.packages.x86_64-linux.disko}/bin/disko";
+      };
+
       nixosConfigurations = {
         voidreliquary = mkHost "voidreliquary";
         whitedwarf = mkHost "whitedwarf";

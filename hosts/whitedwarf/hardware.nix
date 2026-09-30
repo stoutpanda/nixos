@@ -5,9 +5,12 @@
 {
   imports = [ inputs.nixos-hardware.nixosModules.asus-zephyrus-ga402x-nvidia ];
 
+  # Intentional: keep the ASUS on the latest kernel available in the stable input.
+  # Build and test NVIDIA, peripherals, and suspend after kernel updates.
   boot.kernelPackages = pkgs.linuxPackages_latest;
 
   boot.loader.systemd-boot.enable = true;
+  boot.loader.systemd-boot.configurationLimit = 5;
   boot.loader.efi.canTouchEfiVariables = true;
 
   hardware.enableRedistributableFirmware = true;
