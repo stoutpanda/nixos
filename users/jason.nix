@@ -17,8 +17,8 @@
       "scanner"
       "openrazer"
     ];
-    # Temporary. Change it with `passwd` after first login. Only applied when the user is created.
-    initialPassword = "changeme";
+    # Set interactively during installation: nixos-enter --root /mnt -c 'passwd jason'.
+    # The account stays locked until then; subsequent rebuilds preserve the password.
     openssh.authorizedKeys.keyFiles = [ ./jason.pub ];
   };
 

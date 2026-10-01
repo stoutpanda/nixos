@@ -13,7 +13,7 @@
   };
   services.desktopManager.plasma6.enable = true;
 
-  # Unlock KWallet at login so Thunderbird and browsers can read stored passwords.
+  # Unlock KWallet at password login for applications that use it.
   security.pam.services.sddm.kwallet.enable = true;
 
   environment.systemPackages = with pkgs; [
@@ -22,7 +22,7 @@
       accents = [ "mauve" ];
       winDecStyles = [ "modern" ];
     })
-    papirus-icon-theme
+    # Includes the Papirus icon theme as well as the colored folders.
     (catppuccin-papirus-folders.override {
       flavor = "macchiato";
       accent = "mauve";

@@ -33,7 +33,7 @@ in
               content = {
                 type = "swap";
                 randomEncryption = true;
-                priority = 100; # prefer to encrypt as long as we have space for it
+                priority = 1; # below zram's default of 5, so zram fills first
               };
             };
         luks = {

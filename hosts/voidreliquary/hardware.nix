@@ -6,6 +6,7 @@
   imports = [ inputs.nixos-hardware.nixosModules.framework-intel-core-ultra-series3 ];
 
   boot.loader.systemd-boot.enable = true;
+  boot.loader.systemd-boot.configurationLimit = 5;
   boot.loader.efi.canTouchEfiVariables = true;
 
   hardware.enableRedistributableFirmware = true;

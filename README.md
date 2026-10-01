@@ -7,6 +7,12 @@ NixOS config for two laptops. One flake, Home Manager as a NixOS module, one reb
 | `voidreliquary` | Framework Laptop 13 Pro, Intel Core Ultra Series 3 | main laptop |
 | `whitedwarf` | ASUS ROG Zephyrus G14 GA402X, Ryzen 7040 + RTX 4060 | defined; install after voidreliquary settles |
 
+## Documentation
+
+- [Installing a new host](docs/installing-a-new-host.md): backup, adding a host to the flake, installing from the ISO, first login, restore, verification.
+- [Maintenance](docs/maintenance.md): evaluating and building hosts, updating inputs, checking a change without NixOS, rolling back.
+- [Archived Hyprland config](archive/hyprland/README.md): the old Hyprland setup, kept for reference and not imported.
+
 ## Ground rules
 
 1. One repo, one flake, one command: `sudo nixos-rebuild switch --flake ~/nixos#<host>` (alias `nrs`). It applies system and Home Manager together.
@@ -28,67 +34,51 @@ modules/              system modules; never name a host, disk or IP
   desktop/plasma.nix  a host imports exactly one desktop/<ui>.nix; it imports desktop/common.nix
 home/                 Home Manager for jason: theme, shell, git, terminal, editor, apps
 overlays/unstable.nix
+docs/                 install and maintenance guides
 archive/hyprland/     old Hyprland config, not imported
 ```
 
 Add an app: put it in `home/apps.nix` (user apps) or the matching module (system services), rebuild, commit.
 
-Add a host: copy `hosts/voidreliquary/`, replace `hardware.nix` and `disko.nix`, pick imports in `default.nix`, add `<name> = mkHost "<name>";` to `flake.nix`.
+Add a host: see [Installing a new host](docs/installing-a-new-host.md#1-define-the-host-in-the-repo).
 
-## Install
+## History
 
-Every step runs on the laptop from the NixOS 26.05 ISO. **disko wipes the whole disk.**
+This repo replaces several earlier attempts. They are kept on GitHub for reference; nothing here imports them.
 
-```sh
-# on the laptop, in the ISO shell (connect Wi-Fi first: nmtui)
-sudo -i
-ls -l /dev/disk/by-id | grep nvme | grep -v part
-git clone https://github.com/stoutpanda/nixos.git /root/nixos
-cd /root/nixos
-vim hosts/<host>/disko.nix          # replace DISK-ID with the nvme-... name above
-nix --extra-experimental-features 'nix-command flakes' run github:nix-community/disko/latest -- \
-  --mode destroy,format,mount hosts/<host>/disko.nix   # asks for the LUKS passphrase
-nixos-generate-config --no-filesystems --root /mnt --dir hosts/<host>
-git add -A
-git -c user.name=stoutpanda -c user.email=stoutpanda@protonmail.com commit -m "Add <host> hardware config"
-nixos-install --flake .#<host> --no-root-passwd
-cp -r /root/nixos /mnt/home/jason/nixos && chown -R 1000:100 /mnt/home/jason
-reboot
-```
+| Repo | What it was |
+|---|---|
+| [stoutpanda/nix-hydenix](https://github.com/stoutpanda/nix-hydenix) (archived) | A first pass at NixOS by way of [Hydenix](https://github.com/richen604/hydenix), to learn how NixOS and a HyDE/hyprdots Hyprland setup fit together. |
+| [stoutpanda/nix-conf](https://github.com/stoutpanda/nix-conf) (archived) | The first hand-written NixOS config. Set aside to rebuild with Home Manager first. |
+| [stoutpanda/home-manager](https://github.com/stoutpanda/home-manager) | Standalone Home Manager flake: `my.*` enable options, Catppuccin, LazyVim, Ghostty, and agenix secrets pulled from a separate private repo. |
+| [stoutpanda/nix-configs](https://github.com/stoutpanda/nix-configs) | NixOS flake for whitedwarf on nixos-unstable: Hyprland, NVIDIA PRIME offload, the CachyOS kernel via Chaotic-Nyx, and Lix. It took Home Manager from the repo above. |
 
-## First login
+What changed in this repo, and why: the two-repo split and the private secrets repo became one flake with Home Manager as a NixOS module; agenix was dropped in favor of keeping nothing secret in git; `my.*` option layers became plain imports; unstable, Chaotic-Nyx, and Lix became the stable channel with a one-line-per-package unstable overlay; Hyprland became Plasma (the Hyprland config lives in `archive/hyprland/`); and hand-partitioning became disko.
 
-1. Log in as `jason` with password `changeme`, then run `passwd`.
-2. Open Bitwarden, sign in, turn on Settings > SSH agent. Check: `ssh-add -l`.
-3. `cd ~/nixos && git remote set-url origin git@github.com:stoutpanda/nixos.git && git push`
-4. `sudo tailscale up --accept-routes`
-5. `gh auth login`, `glab auth login`, `rbw config set email <you>` as needed.
-6. Plasma theme, once:
-   ```sh
-   plasma-apply-lookandfeel -a Catppuccin-Macchiato-Mauve
-   plasma-apply-cursortheme catppuccin-macchiato-mauve-cursors
-   kwriteconfig6 --file kdeglobals --group Icons --key Theme Papirus-Dark
-   ```
-7. Thunderbird: add mail accounts in the app. Passwords go to KWallet.
-8. Neovim with LazyVim (optional): `git clone https://github.com/LazyVim/starter ~/.config/nvim`
-9. voidreliquary: enroll a fingerprint in System Settings > Users.
+## Inspirations
 
-## Verify
+Carried over from the earlier repos:
 
-```sh
-# on the laptop
-powerprofilesctl                # three profiles
-fwupdmgr get-devices            # the laptop's firmware shows up
-tailscale status
-ssh-add -l                      # the Bitwarden key
-```
+- [vimjoyer's flake-starter-config](https://github.com/vimjoyer/flake-starter-config): modular structure.
+- [Mitchell Hashimoto's nixos-config](https://github.com/mitchellh/nixos-config): using flakes to pull in specific software projects, and [thoughtful Home Manager program configs](https://github.com/mitchellh/nixos-config/blob/main/users/mitchellh/home-manager.nix).
+- [fzakaria/nix-home](https://github.com/fzakaria/nix-home): the "Secrets for Dummies" guide to secrets in Nix.
+- [Hydenix](https://github.com/richen604/hydenix): helped me wrap my head around Hyprland on NixOS.
+- [Omarchy](https://github.com/basecamp/omarchy) and [DHH](https://github.com/dhh): for making me aware of [Hyprland](https://github.com/hyprwm/Hyprland).
+- [Surma's "Nix Explained from the Ground Up"](https://www.youtube.com/watch?v=5D3nUU1OVx8) video.
 
-Close the lid: it suspends. Steam launches a game. On whitedwarf: `supergfxctl -g`, `asusctl --help`, and a game with `nvidia-offload %command%`.
+## Attributions
 
-## Checking a change without a NixOS machine
+This config is built on:
 
-```sh
-docker run --rm -v "$PWD":/src -w /src nixos/nix sh -c \
-  'git config --global --add safe.directory /src; nix --extra-experimental-features "nix-command flakes" \
-   eval --raw .#nixosConfigurations.voidreliquary.config.system.build.toplevel.drvPath'
-```
+- [NixOS / nixpkgs](https://github.com/NixOS/nixpkgs)
+- [Home Manager](https://github.com/nix-community/home-manager)
+- [disko](https://github.com/nix-community/disko): declarative partitioning, LUKS, and Btrfs subvolumes.
+- [nixos-hardware](https://github.com/NixOS/nixos-hardware): the Framework and Zephyrus hardware modules.
+- [Framework linux-docs](https://github.com/FrameworkComputer/linux-docs): the NixOS guide for the Framework 13 Pro that names the voidreliquary hardware module.
+- [asus-linux](https://asus-linux.org/): `asusctl`, `supergfxctl`, and ROG Control Center on whitedwarf.
+- [Catppuccin](https://github.com/catppuccin/nix) ([docs](https://nix.catppuccin.com)): the Macchiato Mauve theme everywhere.
+- [LazyVim](https://github.com/LazyVim/starter): the optional Neovim setup.
+
+Used in the earlier repos and no longer here: [agenix](https://github.com/ryantm/agenix), [Chaotic-Nyx](https://github.com/chaotic-cx/nyx) (CachyOS kernel and packages), and [Lix](https://lix.systems).
+
+Personal configuration: use at your own risk.

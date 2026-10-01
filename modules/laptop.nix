@@ -18,5 +18,6 @@
   services.fstrim.enable = true;
   services.fwupd.enable = true;
 
+  # Suspend only. zram helps under memory pressure; it is not a hibernation target.
   zramSwap.enable = true;
 }
