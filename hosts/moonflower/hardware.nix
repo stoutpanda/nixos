@@ -5,9 +5,10 @@
 {
   imports = [ inputs.nixos-hardware.nixosModules.asus-zephyrus-ga402x-nvidia ];
 
-  # Intentional: keep the ASUS on the latest kernel available in the stable input.
-  # Build and test NVIDIA, peripherals, and suspend after kernel updates.
-  boot.kernelPackages = pkgs.linuxPackages_latest;
+  # LTS kernel, not linuxPackages_latest: NVIDIA's out-of-tree module lags new kernels
+  # (nvidia-open 595 failed to build against 7.2). Build and test NVIDIA, peripherals,
+  # and suspend before moving to a newer kernel.
+  boot.kernelPackages = pkgs.linuxPackages;
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.systemd-boot.configurationLimit = 5;

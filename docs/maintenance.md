@@ -5,7 +5,7 @@
 With Nix installed, evaluate both hosts before switching. Run the following block in Bash (`bash` from fish). Before a first installation or a kernel/driver update, also build the target system; evaluation alone does not compile packages or test activation and hardware.
 
 ```sh
-for host in voidreliquary whitedwarf; do
+for host in voidreliquary moonflower; do
   nix eval --no-write-lock-file --raw ".#nixosConfigurations.$host.config.system.build.toplevel.drvPath" || exit
 done
 nix build --no-write-lock-file .#nixosConfigurations.voidreliquary.config.system.build.toplevel
@@ -21,7 +21,7 @@ AI agents (`home/ai.nix`) update daily upstream. Bump just them with `nix flake 
 docker run --rm -v "$PWD":/src:ro -w /src nixos/nix sh -c \
   'set -e
    git config --global --add safe.directory /src
-   for host in voidreliquary whitedwarf; do
+   for host in voidreliquary moonflower; do
      nix --extra-experimental-features "nix-command flakes" \
        eval --no-write-lock-file --raw ".#nixosConfigurations.$host.config.system.build.toplevel.drvPath"
    done'

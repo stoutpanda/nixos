@@ -1,4 +1,4 @@
-# Home Manager config for jason. Applied by nixos-rebuild; there is no separate home-manager switch.
+# Home Manager config shared by all users. Applied by nixos-rebuild; there is no separate home-manager switch.
 { ... }:
 {
   imports = [
@@ -10,9 +10,6 @@
     ./apps.nix
     ./ai.nix
   ];
-
-  home.username = "jason";
-  home.homeDirectory = "/home/jason";
 
   home.stateVersion = "26.05";
 }

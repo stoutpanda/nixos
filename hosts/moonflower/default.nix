@@ -12,9 +12,10 @@
     ../../modules/desktop/plasma.nix
     ../../modules/gaming.nix
     ../../users/jason.nix
+    ../../users/ashtrix.nix
   ];
 
-  networking.hostName = "whitedwarf";
+  networking.hostName = "moonflower";
 
   system.stateVersion = "26.05";
 }

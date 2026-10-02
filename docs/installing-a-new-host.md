@@ -1,6 +1,6 @@
 # Installing a new host
 
-This guide covers the whole path from an empty laptop to a working system: back up the old install, define the host in this repo, install from the NixOS ISO, then finish setup at first login. It also works for reinstalling an existing host (`voidreliquary` or `whitedwarf`): skip step 1 and pass that host's name.
+This guide covers the whole path from an empty laptop to a working system: back up the old install, define the host in this repo, install from the NixOS ISO, then finish setup at first login. It also works for reinstalling an existing host (`voidreliquary` or `moonflower`): skip step 1 and pass that host's name.
 
 **disko wipes the whole disk.** Do not start step 2 until the backup in step 0 has been checked.
 
@@ -35,9 +35,9 @@ Then edit the copy:
 
 | File | What to change |
 |---|---|
-| `hosts/<name>/default.nix` | Set `networking.hostName`. Pick imports: exactly one `modules/desktop/<ui>.nix`, plus whichever of `laptop.nix`, `tailscale.nix`, `docker.nix`, `gaming.nix` apply, plus `users/jason.nix`. Keep `system.stateVersion` at the release you install with. |
+| `hosts/<name>/default.nix` | Set `networking.hostName`. Pick imports: exactly one `modules/desktop/<ui>.nix`, plus whichever of `laptop.nix`, `tailscale.nix`, `docker.nix`, `gaming.nix` apply, plus `users/jason.nix` (and `users/ashtrix.nix` for a second login user). Keep `system.stateVersion` at the release you install with. |
 | `hosts/<name>/hardware.nix` | Everything specific to the machine. Import the matching module from [nixos-hardware](https://github.com/NixOS/nixos-hardware) (see its `flake.nix` for names), keep systemd-boot and the monthly Btrfs scrub, and add any vendor services (fingerprint reader, `asusd`, and so on). Drop anything from the copied host that does not apply. |
-| `hosts/<name>/disko.nix` | Disk layout: ESP + LUKS with Btrfs subvolumes for `/`, `/nix`, `/home`, `/var/log`, `/.snapshots`. Set `device` to `/dev/disk/by-id/DISK-ID`; step 2 fills in the real ID. Adjust partition sizes to the disk. voidreliquary's copy also has a randomly encrypted swap partition. Keep it if you want disk swap on top of zram, or delete that partition to use zram only, as whitedwarf does. |
+| `hosts/<name>/disko.nix` | Disk layout: ESP + LUKS with Btrfs subvolumes for `/`, `/nix`, `/home`, `/var/log`, `/.snapshots`. Set `device` to `/dev/disk/by-id/DISK-ID`; step 2 fills in the real ID. Adjust partition sizes to the disk. voidreliquary's copy also has a randomly encrypted swap partition. Keep it if you want disk swap on top of zram, or delete that partition to use zram only, as moonflower does. |
 | `hosts/<name>/hardware-configuration.nix` | Leave the copy for now so the flake evaluates. Step 2 replaces it with the real one. |
 | `flake.nix` | Add `<name> = mkHost "<name>";` under `nixosConfigurations`. |
 
@@ -63,7 +63,7 @@ First identify the disk, capture the real hardware configuration, and build the 
 sudo -i
 set -e
 export NIX_CONFIG='experimental-features = nix-command flakes'
-install_host=voidreliquary         # or whitedwarf, or the host from step 1
+install_host=voidreliquary         # or moonflower, or the host from step 1
 git clone https://github.com/stoutpanda/nixos.git /root/nixos
 cd /root/nixos
 lsblk -o NAME,SIZE,MODEL,SERIAL,MOUNTPOINTS
@@ -137,10 +137,10 @@ Check audio, microphone, Wi-Fi, Bluetooth, and an external display. Test lid-clo
 Both laptops suspend only; hibernation and suspend-then-hibernate are not configured. Swap differs per host:
 
 - **voidreliquary:** zram (from `modules/laptop.nix`) plus a 32G swap partition in `disko.nix`. The partition uses `randomEncryption`, so it gets a fresh key on every boot and cannot be a hibernation target. It is set to priority 1, below zram's default of 5, so the kernel fills zram first and uses the disk partition only as overflow.
-- **whitedwarf:** zram only.
+- **moonflower:** zram only.
 
 Check with `swapon --show`: it should list `/dev/zram0`, and on voidreliquary also the encrypted partition (`/dev/mapper/...`) with the priorities above.
 
-On whitedwarf: check `supergfxctl -g`, `asusctl --help`, and a game with `nvidia-offload %command%`. Boot the `power-saving` specialisation separately, then test suspend/resume and the display connections you use there too. This host intentionally uses `linuxPackages_latest` from the stable input; repeat the graphics, peripheral, and suspend checks after kernel updates.
+On moonflower: check `supergfxctl -g`, `asusctl --help`, and a game with `nvidia-offload %command%`. Boot the `power-saving` specialisation separately, then test suspend/resume and the display connections you use there too. This host uses the LTS kernel because the NVIDIA module lags new kernels; repeat the graphics, peripheral, and suspend checks before moving it to a newer kernel.
 
 Check `systemctl --failed` and `systemctl status home-manager-jason.service`. After the first successful rebuild, boot the previous generation once to confirm the recovery path. The boot menu keeps at most five generations; weekly garbage collection removes eligible generations older than 14 days.

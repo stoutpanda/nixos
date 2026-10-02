@@ -1,5 +1,5 @@
 {
-  description = "NixOS laptops: voidreliquary (Framework 13 Pro) and whitedwarf (ASUS Zephyrus G14).";
+  description = "NixOS laptops: voidreliquary (Framework 13 Pro) and moonflower (ASUS Zephyrus G14).";
 
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-26.05";
@@ -72,7 +72,7 @@
 
       nixosConfigurations = {
         voidreliquary = mkHost "voidreliquary";
-        whitedwarf = mkHost "whitedwarf";
+        moonflower = mkHost "moonflower";
       };
     };
 }

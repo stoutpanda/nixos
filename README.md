@@ -5,7 +5,7 @@ NixOS config for two laptops. One flake, Home Manager as a NixOS module, one reb
 | Host | Machine | Status |
 |---|---|---|
 | `voidreliquary` | Framework Laptop 13 Pro, Intel Core Ultra Series 3 | main laptop |
-| `whitedwarf` | ASUS ROG Zephyrus G14 GA402X, Ryzen 7040 + RTX 4060 | defined; install after voidreliquary settles |
+| `moonflower` | ASUS ROG Zephyrus G14 GA402X, Ryzen 7040 + RTX 4060 | defined; install after voidreliquary settles |
 
 ## Documentation
 
@@ -51,7 +51,7 @@ This repo replaces several earlier attempts. They are kept on GitHub for referen
 | [stoutpanda/nix-hydenix](https://github.com/stoutpanda/nix-hydenix) (archived) | A first pass at NixOS by way of [Hydenix](https://github.com/richen604/hydenix), to learn how NixOS and a HyDE/hyprdots Hyprland setup fit together. |
 | [stoutpanda/nix-conf](https://github.com/stoutpanda/nix-conf) (archived) | The first hand-written NixOS config. Set aside to rebuild with Home Manager first. |
 | [stoutpanda/home-manager](https://github.com/stoutpanda/home-manager) | Standalone Home Manager flake: `my.*` enable options, Catppuccin, LazyVim, Ghostty, and agenix secrets pulled from a separate private repo. |
-| [stoutpanda/nix-configs](https://github.com/stoutpanda/nix-configs) | NixOS flake for whitedwarf on nixos-unstable: Hyprland, NVIDIA PRIME offload, the CachyOS kernel via Chaotic-Nyx, and Lix. It took Home Manager from the repo above. |
+| [stoutpanda/nix-configs](https://github.com/stoutpanda/nix-configs) | NixOS flake for whitedwarf (now moonflower) on nixos-unstable: Hyprland, NVIDIA PRIME offload, the CachyOS kernel via Chaotic-Nyx, and Lix. It took Home Manager from the repo above. |
 
 What changed in this repo, and why: the two-repo split and the private secrets repo became one flake with Home Manager as a NixOS module; agenix was dropped in favor of keeping nothing secret in git; `my.*` option layers became plain imports; unstable, Chaotic-Nyx, and Lix became the stable channel with a one-line-per-package unstable overlay; Hyprland became Plasma (the Hyprland config lives in `archive/hyprland/`); and hand-partitioning became disko.
 
@@ -75,7 +75,7 @@ This config is built on:
 - [disko](https://github.com/nix-community/disko): declarative partitioning, LUKS, and Btrfs subvolumes.
 - [nixos-hardware](https://github.com/NixOS/nixos-hardware): the Framework and Zephyrus hardware modules.
 - [Framework linux-docs](https://github.com/FrameworkComputer/linux-docs): the NixOS guide for the Framework 13 Pro that names the voidreliquary hardware module.
-- [asus-linux](https://asus-linux.org/): `asusctl`, `supergfxctl`, and ROG Control Center on whitedwarf.
+- [asus-linux](https://asus-linux.org/): `asusctl`, `supergfxctl`, and ROG Control Center on moonflower.
 - [Catppuccin](https://github.com/catppuccin/nix) ([docs](https://nix.catppuccin.com)): the Macchiato Mauve theme everywhere.
 - [LazyVim](https://github.com/LazyVim/starter): the optional Neovim setup.
 
