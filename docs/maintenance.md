@@ -13,6 +13,8 @@ nix build --no-write-lock-file .#nixosConfigurations.voidreliquary.config.system
 
 For dependency updates, start with a clean checkout, run `nix flake update`, review `git diff -- flake.lock`, then evaluate both hosts and build the one you will switch. Commit the lockfile with any compatibility fixes. Keep `system.stateVersion` and `home.stateVersion` at `26.05`; they are compatibility settings, not the channel version to bump on each upgrade.
 
+AI agents (`home/ai.nix`) update daily upstream. Bump just them with `nix flake update llm-agents`; the rest of the system stays put.
+
 ## Checking a change without a NixOS machine
 
 ```sh

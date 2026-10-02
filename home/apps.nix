@@ -12,7 +12,6 @@
   programs.rbw.enable = true; # Bitwarden CLI: rbw config set email ..., then rbw get <name>
 
   home.packages = with pkgs; [
-    claude-code
     obsidian
     discord
     vlc

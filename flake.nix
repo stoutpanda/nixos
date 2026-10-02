@@ -13,6 +13,8 @@
       url = "github:nix-community/disko/latest";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # AI coding agents. No nixpkgs follows: upstream builds against its own nixpkgs, which keeps its binary cache usable.
+    llm-agents.url = "github:numtide/llm-agents.nix";
     catppuccin = {
       url = "github:catppuccin/nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -26,6 +28,7 @@
       home-manager,
       disko,
       catppuccin,
+      llm-agents,
       ...
     }@inputs:
     let
@@ -41,7 +44,10 @@
             home-manager.nixosModules.home-manager
             {
               nixpkgs.config.allowUnfree = true;
-              nixpkgs.overlays = [ (import ./overlays/unstable.nix { inherit nixpkgs-unstable; }) ];
+              nixpkgs.overlays = [
+                (import ./overlays/unstable.nix { inherit nixpkgs-unstable; })
+                (import ./overlays/llm-agents.nix { inherit llm-agents; })
+              ];
 
               # Home Manager runs inside nixos-rebuild: one command applies system and user config.
               home-manager = {

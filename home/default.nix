@@ -8,6 +8,7 @@
     ./terminal.nix
     ./editor.nix
     ./apps.nix
+    ./ai.nix
   ];
 
   home.username = "jason";
