@@ -12,4 +12,5 @@ in
   inherit unstable;
   steam = unstable.steam;
   mangohud = unstable.mangohud;
+  signal-desktop = unstable.signal-desktop; # Signal builds expire after ~90 days
 }

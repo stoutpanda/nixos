@@ -19,4 +19,24 @@
     interval = "monthly";
     fileSystems = [ "/" ];
   };
+
+  # Removable Steam library (microSD).
+  # nofail + automount: boot never waits for it; it mounts on first access when present,
+  # and access gives up after a few seconds when absent, so Steam just shows the library offline.
+  fileSystems = builtins.mapAttrs (_: uuid: {
+    device = "/dev/disk/by-uuid/${uuid}";
+    fsType = "btrfs";
+    options = [
+      "compress=zstd"
+      "noatime"
+      "nofail"
+      "noauto"
+      "x-systemd.automount"
+      "x-systemd.idle-timeout=10min"
+      "x-systemd.device-timeout=3s"
+      "x-systemd.mount-timeout=10s"
+    ];
+  }) {
+    "/mnt/msd_games" = "e35e87c1-9d37-4d82-b745-b0e018cd50b3";
+  };
 }
