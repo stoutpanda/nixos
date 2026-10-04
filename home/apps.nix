@@ -20,7 +20,7 @@
     teams-for-linux
     hexchat
     teamspeak6-client
-    rpi-imager
     signal-desktop
+    libreoffice-fresh
   ];
 }
