@@ -20,7 +20,14 @@
     teams-for-linux
     hexchat
     teamspeak6-client
-    signal-desktop
+    # Signal's data is encrypted with KWallet (safeStorageBackend in ~/.config/Signal/config.json).
+    # Outside Plasma it would guess gnome-libsecret and refuse to open, so pin the backend.
+    (symlinkJoin {
+      name = "signal-desktop";
+      paths = [ signal-desktop ];
+      nativeBuildInputs = [ makeWrapper ];
+      postBuild = "wrapProgram $out/bin/signal-desktop --add-flags --password-store=kwallet6";
+    })
     libreoffice-fresh
   ];
 }

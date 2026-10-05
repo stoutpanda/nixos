@@ -9,7 +9,8 @@
     ../../modules/laptop.nix
     ../../modules/tailscale.nix
     ../../modules/docker.nix
-    ../../modules/desktop/plasma.nix
+    # Desktop: niri.nix or plasma.nix. Swap this line to switch back.
+    ../../modules/desktop/niri.nix
     ../../modules/gaming.nix
     ../../users/jason.nix
   ];

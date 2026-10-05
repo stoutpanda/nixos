@@ -19,6 +19,10 @@
       url = "github:catppuccin/nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    # Noctalia shell and greeter for the niri desktop. No nixpkgs follows: keeps noctalia.cachix.org usable.
+    # The cachix branch only advances to commits that are already in the cache.
+    noctalia.url = "github:noctalia-dev/noctalia/cachix";
+    noctalia-greeter.url = "github:noctalia-dev/noctalia-greeter";
   };
 
   outputs =
