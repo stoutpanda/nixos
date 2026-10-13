@@ -28,6 +28,7 @@
       nativeBuildInputs = [ makeWrapper ];
       postBuild = "wrapProgram $out/bin/signal-desktop --add-flags --password-store=kwallet6";
     })
+    zapzap # WhatsApp (web client wrapper; there is no official Linux app)
     libreoffice-fresh
   ];
 }
