@@ -91,6 +91,12 @@ in
   # Razer peripherals (polychromatic is the GUI). The user needs the openrazer group.
   hardware.openrazer.enable = true;
 
+  # Logitech Unifying/Bolt receivers: udev rules plus Solaar for pairing and battery status.
+  hardware.logitech.wireless = {
+    enable = true;
+    enableGraphical = true;
+  };
+
   # ZSA keyboards (Moonlander, Voyager) and their flashing tools.
   hardware.keyboard.zsa.enable = true;
 
