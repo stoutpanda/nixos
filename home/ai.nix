@@ -15,5 +15,6 @@
     paperclip
     t3code
     dsh
+    herdr
   ];
 }
