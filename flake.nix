@@ -51,6 +51,7 @@
               nixpkgs.overlays = [
                 (import ./overlays/unstable.nix { inherit nixpkgs-unstable; })
                 (import ./overlays/llm-agents.nix { inherit llm-agents; })
+                (import ./overlays/fixes.nix)
               ];
 
               # Home Manager runs inside nixos-rebuild: one command applies system and user config.
