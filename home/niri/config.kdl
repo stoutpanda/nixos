@@ -9,6 +9,11 @@
 // Check the wiki for a full description of the configuration:
 // https://niri-wm.github.io/niri/Configuration:-Introduction
 
+// Communication apps: Signal over ZapZap, Discord, Thunderbird. Named workspaces always
+// exist and stay first, so Mod+1 lands here. niri-chat-layout (home/niri/chat-layout.sh)
+// arranges the columns; the window rules below send the apps here when they open.
+workspace "chat"
+
 // Input device configuration.
 // Find the full list of options on the wiki:
 // https://niri-wm.github.io/niri/Configuration:-Input
@@ -277,6 +282,9 @@ layout {
 // Started here rather than as a systemd unit, as Noctalia's docs recommend.
 spawn-at-startup "noctalia"
 
+// Opens and arranges the chat workspace; Mod+Shift+C runs it again.
+spawn-at-startup "niri-chat-layout"
+
 // To run a shell command (with variables, pipes, etc.), use spawn-sh-at-startup:
 // spawn-sh-at-startup "qs -c ~/source/qs/MyAwesomeShell"
 
@@ -375,6 +383,26 @@ window-rule {
     open-floating true
     default-column-width { fixed 1080; }
     default-window-height { fixed 920; }
+}
+
+// Communication apps open on the chat workspace at the widths niri-chat-layout sets.
+window-rule {
+    match app-id="^signal$"
+    match app-id=r#"^com\.rtosta\.zapzap$"#
+    open-on-workspace "chat"
+    default-column-width { proportion 0.5; }
+}
+
+window-rule {
+    match app-id="^discord$"
+    open-on-workspace "chat"
+    default-column-width { fixed 800; }
+}
+
+window-rule {
+    match app-id="^thunderbird$"
+    open-on-workspace "chat"
+    default-column-width { proportion 1.0; }
 }
 
 binds {
@@ -607,6 +635,9 @@ binds {
 
     // Center all fully visible columns on screen.
     Mod+Ctrl+C { center-visible-columns; }
+
+    // Reopen and rearrange the chat workspace.
+    Mod+Shift+C hotkey-overlay-title="Arrange chat workspace" { spawn "niri-chat-layout"; }
 
     // Finer width adjustments.
     // This command can also:

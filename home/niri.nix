@@ -68,6 +68,19 @@ in
 
   xdg.configFile."niri/config.kdl".source = niriConfig;
 
+  # Started by niri at login and on Mod+Shift+C; the apps it launches come from home/apps.nix.
+  home.packages = [
+    (pkgs.writeShellApplication {
+      name = "niri-chat-layout";
+      runtimeInputs = [
+        pkgs.niri
+        pkgs.jq
+        pkgs.util-linux
+      ];
+      text = builtins.readFile ./niri/chat-layout.sh;
+    })
+  ];
+
   # Written to ~/.config/noctalia/config.toml and validated at build time.
   # Changes made in Noctalia's Settings window go to ~/.local/state/noctalia/settings.toml and win over these.
   # Every key with its default: example.toml in the noctalia repo.
