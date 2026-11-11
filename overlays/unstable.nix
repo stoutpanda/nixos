@@ -13,4 +13,6 @@ in
   steam = unstable.steam;
   mangohud = unstable.mangohud;
   signal-desktop = unstable.signal-desktop; # Signal builds expire after ~90 days
+  # Temporary: stable bumped vscode to 1.144 without the ripgrep-universal path fix in generic.nix.
+  vscode = unstable.vscode;
 }
