@@ -4,6 +4,7 @@
 {
   home.packages = with pkgs.llm-agents; [
     claude-code
+    claude-desktop
     codex
     gemini-cli
     opencode
